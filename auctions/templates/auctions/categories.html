@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<!-- workaround: make it possible to retrieve what page we're on, to change the appropriate nav-link's color with js -->
+<div id="pageLink" style="display: none;">categories</div>
+
+<div class="categories-container text-center flex-col flex-cent-cent bx-sha">
+    <div class="attacher b-att">
+        <div class="ledge seamless-b">
+            <h2 class="categories-title">Categories</h2>
+        </div>
+    </div>
+
+    <div class="ledge">
+        <div class="flex-row flex-cent-cent categories-cards">
+
+            {% for category in categories %}
+            <span class="custom-btn-wrapper m-2">
+                <a class="btn-big btn-corrected custom-btn-white whi-gre-gra" href="{% url 'category_listings' category.name %}">
+                    {{ category.name }}
+                </a>
+            </span>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

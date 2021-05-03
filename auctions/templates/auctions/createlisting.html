@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<!-- workaround: make it possible to retrieve what page we're on, to change the appropriate nav-link's color with js -->
+<div id="pageLink" style="display: none;">create listing</div>
+
+<div class="flex-col flex-cent-cent mt-2 pb-3 mb-3" style="width: 100%;">
+    <h2 class="text-center">Create A New Listing</h2>
+
+    {% if messages %}
+    {% for message in messages %}
+    <!-- !!! note !!! For now: only count on a 'successful listing creation'-message or a 
+                    'successfull-login'-message to come through -->
+    {% if message.tags == 'error' %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <form class="col-12 col-md-10" style="max-width: 800px; padding: 0px;" action="{% url 'createlisting' %}"
+        method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+
+        <div class="custom-btn-wrapper rounded-s mb-4" style="width: 180px; margin-left: auto;">
+            <input class="btn-big btn-corrected custom-btn1 blu-gra rounded-s" style="color: cornsilk; width: 100%;"
+                type="submit" value="Create listing">
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

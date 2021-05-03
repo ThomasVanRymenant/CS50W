@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<!-- workaround: make it possible to retrieve what page we're on, to change the appropriate nav-link's color with js -->
+<div id="pageLink" style="display: none;">log in</div>
+
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="alert alert-danger" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<div class="flex-col flex-cent-cent mt-2 pb-3" style="width: 100%;">
+    <h2 class="mb-3">Login</h2>
+
+    <form action="{% url 'login' %}" method="post" class="col-12 col-md-10" style="max-width: 500px; padding: 0px;">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control inset-bx-sha" type="text" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input class="form-control inset-bx-sha" type="password" name="password" placeholder="Password">
+        </div>
+        <div class="custom-btn-wrapper rounded-s mb-3" style="width: 170px; margin-left: auto; margin-right: auto;">
+            <input class="btn-big btn-corrected custom-btn1 blu-gra rounded-s" style="color: cornsilk; width: 100%;" type="submit" value="Login">
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+</div>
+
+{% endblock %}
