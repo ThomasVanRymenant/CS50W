@@ -1,0 +1,203 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block main %}
+<div id="posts-view">
+
+    <!-- create-post form -->
+    {% if user.is_authenticated %}
+
+        <div id="create_post_view">
+            <div class="profile-picture-container sm">
+                <img src="{% static 'network/default_profile_200x200.png'%}" alt="{{ user.first_name }} {{ user.last_name }}'s profile picture">
+            </div>
+            <form method="POST" action="{% url 'create_post' %}">
+                {% csrf_token %}
+                {% if message %}
+                    <div>{{ message }}</div>
+                {% endif %}
+                <div class="textarea-wrapper">
+                    <div class="pull-tab"></div>
+                    {{ createPostForm }}
+                </div>
+                <input id="tweetBtn" type="submit" value="Tweet">
+            </form>
+        </div>
+    {% endif %}
+
+    {% if page_obj %}
+
+        <!-- posts -->
+        {% for post in page_obj %}
+                    
+            <div class="page-spacer-grey"></div>
+            <div class="post" data-post_id="{{ post.id }}" id="post_{{ post.id }}">
+                <div class="profile-picture-container sm">
+                    <img src="{% static 'network/default_profile_200x200.png'%}" alt="{{ user.first_name }} {{ user.last_name }}'s profile picture">
+                </div>
+                <div class="post-body">
+                    <div class="meta-container">
+                        <div class="creation-info">
+                            <div>
+                                <a class="visit-profile-link" href="{% url 'profile' post.creator.username %}"><span style="font-weight: 700; font-size: 15px;">{{ post.creator.first_name }} {{ post.creator.last_name }}</span></a>
+                                <span style="font-size: 15px;" class="txt-grey"><span style="font-size: 15px;" class="txt-grey" style="position: relative; top: 2px;"> @</span>{{ post.creator.username }}</span>
+                            </div>
+                            <div>
+                                <div class="date">
+                                    {{ post.created_date|date:'g:i A' }}
+                                    <span style="font-size: 15px; position: relative; top: 1px;"> &middot </span>
+                                    {{ post.created_date|date:'M j, Y' }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- edit-button -->
+                        {% if request.user == post.creator %}
+                            <div style="margin-left: auto; overflow: hiddenw;" class="edit-save-btns-container">
+                                <button class="editBtn" data-postid="{{ post.id }}">Edit</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="content">{{ post.content }}</div>
+                    <div class="action-bar">
+                        <div class="actions-container">
+                            <!-- purely for aesthetics, not functionality -->
+                            <div class="action reply-action">
+                                <div class="icon-wrapper">
+                                    <svg class="replyBtn" viewBox="0 0 512 512" width="24px" height="24px">
+                                        <path class="ch-fill-blue-hov" d="M373.333,32H138.667C62.208,32,0,94.208,0,170.667V256c0,76.459,62.208,138.667,138.667,138.667h32v74.667
+                                            c0,4.309,2.603,8.213,6.592,9.856c1.301,0.555,2.709,0.811,4.075,0.811c2.773,0,5.504-1.088,7.531-3.115l82.219-82.219h102.251
+                                            C449.792,394.667,512,332.459,512,256v-85.333C512,94.208,449.792,32,373.333,32z M490.667,256
+                                            c0,64.704-52.651,117.333-117.333,117.333H266.667c-2.837,0-5.547,1.131-7.552,3.136L192,443.584V384
+                                            c0-5.888-4.779-10.667-10.667-10.667h-42.667c-64.683,0-117.333-52.629-117.333-117.333v-85.333
+                                            c0-64.704,52.651-117.333,117.333-117.333h234.667c64.683,0,117.333,52.629,117.333,117.333V256z"/>
+                                    </svg>
+                                </div>
+                                <span class="reply-count txt-grey">0</span>
+                            </div>
+                            <!-- purely for aesthetics, not functionality -->
+                            <div class="action retweet-action">
+                                <div class="icon-wrapper">
+                                    <svg class="retweetBtn ch-stroke-green-hov" width="26px" height="26px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="retweetIconTitle" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000">
+                                        <!-- <title id="retweetIconTitle">Retweet</title> -->
+                                        <path d="M13 18L6 18L6 7"/>
+                                        <path d="M3 9L6 6L9 9"/>
+                                        <path d="M11 6L18 6L18 17"/>
+                                        <path d="M21 15L18 18L15 15"/>
+                                    </svg>
+                                </div>
+                                <span class="retweet-count txt-grey">0</span>
+                            </div>
+                            <div class="action like-action">
+                                <div class="icon-wrapper">
+                                    {% if user.is_authenticated %}
+                                        {% if user in post.likers.all %}
+                                            <!-- option to unlike -->
+                                            <svg class="likeBtn" id="liked-btn" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                                viewBox="0 0 24 24" width="24px">
+                                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                <path class="fill-rouge" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 
+                                                2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                            </svg>
+                                            <svg class="likeBtn" id="like-btn" style="display: none;" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                                viewBox="0 0 24 24" width="24px">
+                                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                <path class="ch-fill-rouge-hov" d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 
+                                                3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 
+                                                3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 
+                                                2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+                                            </svg>      
+                                        </div>
+                                        <span class="like-count txt-rouge">{{ post.likers.count }}</span>                  
+                                        {% else %}
+                                            <!-- option to like -->
+                                            <svg class="likeBtn" id="like-btn" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                                viewBox="0 0 24 24" width="24px">
+                                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                <path class="ch-fill-rouge-hov" d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 
+                                                3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 
+                                                3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 
+                                                2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+                                            </svg>
+                                            <svg class="likeBtn" id="liked-btn" style="display: none;" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                                viewBox="0 0 24 24" width="24px">
+                                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                <path class="fill-rouge" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 
+                                                2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="like-count txt-grey">{{ post.likers.count }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <!-- option to like -->
+                                        <svg class="likeBtn" id="like-btn" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                            viewBox="0 0 24 24" width="24px">
+                                            <path d="M0 0h24v24H0V0z" fill="none"/>
+                                            <path class="ch-fill-rouge-hov" d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 
+                                            3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 
+                                            3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 
+                                            2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+                                        </svg>
+                                        <svg class="likeBtn" id="liked-btn" style="display: none;" xmlns="http://www.w3.org/2000/svg" height="24px" 
+                                            viewBox="0 0 24 24" width="24px">
+                                            <path d="M0 0h24v24H0V0z" fill="none"/>
+                                            <path class="fill-rouge" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 
+                                            2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="like-count txt-grey">{{ post.likers.count }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- pagination (only show when there is more than 1 page) -->
+        {% if multi_page %}
+            <div class="page-spacer-grey"></div>
+            <nav class="my-4" aria-label="Page navigation">
+                <div class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a href="?page=1" class="page-link">first</a></li>
+                        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a></li>
+                    {% else %}
+                        <!-- dead links -->
+                        <li class="page-item disabled"><span class="page-link">first</span></li>
+                        <li class="page-item disabled"><span class="page-link">previous</span></li>
+                    {% endif %}
+
+                    <li class="page-item" aria-current="page">
+                        <span class="page-link page-current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}<span class="sr-only">(current)</span></span>
+                    </li>
+                        
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a></li>
+                        <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last</a></li>
+                    {% else %}
+                        <!-- dead links -->
+                        <li class="page-item disabled"><span class="page-link">next</span></li>
+                        <li class="page-item disabled"><span class="page-link">last</span></li>
+                    {% endif %}
+                </div>
+            </nav>
+        {% endif %}
+
+    {% else %}
+
+        <!-- message to display when no posts are to be shown -->
+        {% if no_posts_message %}
+            <div class="no-posts-message">
+                {{ no_posts_message }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/editpost.js' %}"></script>
+    <script src="{% static 'network/likepost.js' %}"></script>
+{% endblock %}
