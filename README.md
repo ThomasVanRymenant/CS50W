@@ -5,6 +5,7 @@ This is a mini wikipedia-like django app that lets users create, edit and search
 ## Tech used:
 * Python
 * Django
+* HTML
 * CSS
 
 ### Demo on youtube:
