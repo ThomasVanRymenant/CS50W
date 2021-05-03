@@ -1,0 +1,24 @@
+{% extends "encyclopedia/layout.html" %}
+{% block title %}
+    Create New Page
+{% endblock %}
+{% block body %}
+    <h1>Create New Page</h1>
+    {% if entry_is_duplicate == True %}
+        <div class="alert alert-warning col-12 col-sm-10" role="alert">
+            Whoops! Looks like "<b>{{ entry_title }}</b>" already exists.   See <a href="{% url 'entry' entry_title %}">{{ entry_title }}</a>
+        </div>
+    {% endif %}
+    {% if entry_is_invalid == True %}
+        <div class="alert alert-danger col-12 col-sm-10" role="alert">
+            Whoops! Looks like something went wrong. The submitted form was found invalid. Feel free to try again 
+        </div>
+    {% endif %}
+    <form action="{% url 'newentry' %}" method="POST" class="form-width80">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Save Entry">
+    </form>
+{% endblock %}

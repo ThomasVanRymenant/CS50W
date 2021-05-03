@@ -1,0 +1,18 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+  {% if entry_not_found == True %}
+    Wiki: Not Found
+  {% else %}
+    Wiki: {{ entry_title }}
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  {% if entry_not_found == True %}
+    <h1>Could not find the requested page</h1>
+  {% else %}
+    {{ entry_html |safe }}
+    <a class="btn btn-secondary" href="{% url 'editentry' entry_title %}">Edit</a>
+  {% endif %}
+{% endblock %}

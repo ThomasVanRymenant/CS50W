@@ -1,0 +1,8 @@
+{% extends "encyclopedia/layout.html" %}
+{% block title %}
+    Page Already Exists
+{% endblock %}
+{% block body %}
+    <h1>The entry "<b>{{ entry }}</b>" already exists</h1>
+    <div>See <a href="{% url 'entry' entry %}">{{ entry }}</a></div>
+{% endblock %}
