@@ -1,0 +1,70 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+<h2 id="logged-in-user-email" class="mt-2">{{ request.user.email }}</h2>
+
+<div class="flex-row no-wrap">
+    <button id="inbox" class="btn-stnd btn-blue sm mr-2" style="display: flex; align-items: center; justify-content: center;">
+        <span style="margin: 0px 5px 0px 3px;">Inbox</span>
+        <span class="material-icons">inbox</span>
+    </button>
+    <button id="sent" class="btn-stnd btn-blue sm mr-2" style="display: flex; align-items: center; justify-content: center;">
+        <span style="margin: 0px 5px 0px 3px;">Sent</span>
+        <span class="material-icons">outbox</span>
+    </button>
+    <button id="archived" class="btn-stnd btn-blue sm mr-2" style="display: flex; align-items: center; justify-content: center;">
+        <span style="margin: 0px 5px 0px 3px;">Archived</span>
+        <span class="material-icons">inventory_2</span>
+    </button>
+    <button id="compose" class="btn-stnd btn-blue sm mr-2" style="display: flex; align-items: center; justify-content: center;">
+        <span style="margin: 0px 3px;">Compose</span>
+        <span class="material-icons">add</span>
+    </button>
+    <a class="link-dark ml-auto mr-2" href="{% url 'logout' %}" style="align-self: flex-end; display: flex; align-items: center; justify-content: center;">
+        <span>Log Out</span>
+        <span class="material-icons ml-2">logout</span>
+    </a>
+</div>
+<hr>
+
+<div id="emails-view" class="mb-5">
+</div>
+
+<div id="email-detailed-view">
+    <div><span class="text-bold drk-gr" style="font-weight: 700;">From: </span><span id="sender" class="drk-gr"></span></div>
+    <div><span class="text-bold drk-gr">To: </span><span id="recipients" class="drk-gr"></span></div>
+    <div style="font-size: 0.8rem;"><span id="timestamp" class="drk-gr"></span></div>
+    <div class="mt-2 mb-3 flex-row no-wrap">
+        <button id="archiveBtn" class="btn-stnd btn-yellow sm mr-1" style="display: flex; align-items: center; justify-content: center;">
+            <span style="margin: 0px 3px;" id="archive-btn-txt">Archive</span><span class="material-icons">archive</span>
+        </button>
+        <button id="replyBtn" class="btn-stnd btn-green sm mr-1" style="display: flex; align-items: center; justify-content: center;">
+            <span style="margin: 0px 3px;">Reply</span><span class="material-icons">reply</span>
+        </button>
+    </div>
+    <div class="mt-1 mb-2"><span class="text-bold drk-gr" style="font-size: 0.9rem;">Subject: </span><span id="subject"></span></div>
+    <div><span id="body" class="render-newlines"></span></div>
+</div>
+
+<div id="compose-view">
+    <h3 id="compose-form-title">New Email</h3>
+    <form id="compose-form" class="mb-4">
+        <div class="form-group">
+            From: <input disabled class="form-control" value="{{ request.user.email }}">
+        </div>
+        <div class="form-group">
+            To: <input id="compose-recipients" class="form-control">
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="compose-subject" placeholder="Subject">
+        </div>
+        <textarea class="form-control mb-3" id="compose-body" placeholder="Body"></textarea>
+        <input type="submit" class="btn-stnd btn-blue bg" value="Send" />
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'mail/inbox.js' %}"></script>
+{% endblock %}
