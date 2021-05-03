@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div id="secondary-navbar">
+      <a id="secondary-brand" href="./index.html">
+        <span class="blue uppercase">g</span>
+        <span class="red">o</span>
+        <span class="yellow">o</span>
+        <span class="blue">g</span>
+        <span class="green">l</span>
+        <span class="red">e</span>
+      </a>
+      <a href="./index.html" class="nav-link" style="margin-bottom: 13px;">Google Search</a>
+    </div>
+    <div id="advanced-search-banner">
+      Advanced Search
+    </div>
+    <form id="advanced-search-form">
+      <div id="input-info-meta">
+          Find pages with...
+      </div>
+      <div class="input-container advanced">
+        <label for="">all these words:</label>
+        <input class="text-input" type="text" name="as_q">
+      </div>
+      <div class="input-container advanced">
+        <label for="">this exact word or phrase:</label>
+        <input class="text-input" type="text" name="as_epq">
+      </div>
+      <div class="input-container advanced">
+        <label for="">any of these words:</label>
+        <input class="text-input" type="text" name="as_oq">
+      </div>
+      <div class="input-container advanced">
+        <label for="">none of these words:</label>
+        <input class="text-input" type="text" name="as_eq">
+      </div>
+      <div id="button-advanced-container">
+        <div id="spacer1"></div>
+        <span id="spacer-container">
+          <input class="button advanced" type="submit" value="Advanced Search">
+        </span>
+      </div>
+    </form>
+  </body>
+</html>
